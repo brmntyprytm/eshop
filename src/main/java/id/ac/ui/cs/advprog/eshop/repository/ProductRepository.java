@@ -23,4 +23,15 @@ public class ProductRepository {
     public boolean delete(Product product) {
         return productData.remove(product);
     }
+
+    public Product edit(Product product) {
+        for (int i=0; i < productData.size(); i++) {
+            Product curProduct = productData.get(i);
+            if (curProduct.getProductId().equals(product.getProductId())) {
+                return productData.set(i, product);
+            }
+        }
+        // Product not found
+        return null;
+    }
 }

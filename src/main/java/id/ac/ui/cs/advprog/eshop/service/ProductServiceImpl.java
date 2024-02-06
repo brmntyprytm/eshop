@@ -31,17 +31,22 @@ public class ProductServiceImpl implements ProductService{
         return allProduct;
     }
 
-    @Override
-    public Boolean delete(int id) {
+    public Product get(String id) {
         Product product = null;
         Iterator<Product> iterator = productRepository.findAll();
         while (iterator.hasNext()) {
             Product currentIteration = iterator.next();
-            if (currentIteration.getProductId().equals(Integer.toString(id))) {
+            if (currentIteration.getProductId().equals(id)) {
                 product = currentIteration;
                 break;
             }
         }
+        return product;
+    }
+
+    @Override
+    public Boolean delete(String id) {
+        Product product = get(id);
         if (product != null) {
             int newQuantity = product.getProductQuantity() - 1;
             if (newQuantity >= 0) {
@@ -56,6 +61,12 @@ public class ProductServiceImpl implements ProductService{
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Product edit(Product product) {
+        productRepository.edit(product);
+        return product;
     }
 
 }
