@@ -43,7 +43,7 @@ class CreateProductFunctionalTest {
 
         WebElement quantityInput = driver.findElement(By.id("quantityInput"));
         quantityInput.clear();
-        String quantity = "100";
+        String quantity = "69";
         quantityInput.sendKeys(quantity);
 
         WebElement submitButton = driver.findElement(By.tagName("button"));
