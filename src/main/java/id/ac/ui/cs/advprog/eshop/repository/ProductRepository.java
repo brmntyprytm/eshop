@@ -25,13 +25,16 @@ public class ProductRepository {
     }
 
     public Product edit(Product product) {
-        for (int i=0; i < productData.size(); i++) {
-            Product curProduct = productData.get(i);
+        for (Product curProduct : productData) {
             if (curProduct.getProductId().equals(product.getProductId())) {
-                return productData.set(i, product);
+                int index = productData.indexOf(curProduct);
+                if (index != -1) {
+                    productData.set(index, product);
+                    return product;
+                }
             }
         }
-        // Product not found
         return null;
     }
+
 }
