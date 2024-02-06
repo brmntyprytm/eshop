@@ -25,6 +25,13 @@ public class ProductRepository {
     }
 
     public Product edit(Product product) {
+        // Validate if the edited quantity is negative
+        if (product.getProductQuantity() < 0) {
+            // Return an error or throw an exception indicating that negative quantities are not allowed
+            throw new IllegalArgumentException("Negative quantities are not allowed.");
+        }
+
+        // Find the product in the list and update it
         for (Product curProduct : productData) {
             if (curProduct.getProductId().equals(product.getProductId())) {
                 int index = productData.indexOf(curProduct);
@@ -34,7 +41,9 @@ public class ProductRepository {
                 }
             }
         }
+        // If the product is not found, return null
         return null;
     }
+
 
 }
