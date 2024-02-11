@@ -44,6 +44,4 @@ public class ProductRepository {
         // If the product is not found, return null
         return null;
     }
-
-
 }
