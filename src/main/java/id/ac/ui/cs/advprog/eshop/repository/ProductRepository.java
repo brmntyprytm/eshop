@@ -44,4 +44,14 @@ public class ProductRepository {
         return null;
     }
 
+    public Product findById(String productId) {
+        for (Product product : productData) {
+            if (product.getProductId().equals(productId)) {
+                return product;
+            }
+        }
+        return null; // If no product with the specified ID is found
+    }
+
+
 }
