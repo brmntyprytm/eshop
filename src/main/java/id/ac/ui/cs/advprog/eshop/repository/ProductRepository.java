@@ -32,7 +32,7 @@ public class ProductRepository {
         }
 
         // Find the product in the list and update it
-        for (Product curProduct : productData) {
+        for (Product curProduct : productData)
             if (curProduct.getProductId().equals(product.getProductId())) {
                 int index = productData.indexOf(curProduct);
                 if (index != -1) {
@@ -40,10 +40,8 @@ public class ProductRepository {
                     return product;
                 }
             }
-        }
         // If the product is not found, return null
         return null;
     }
-
 
 }
