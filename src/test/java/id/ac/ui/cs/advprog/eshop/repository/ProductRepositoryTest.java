@@ -120,6 +120,26 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    void testEditProductWithNonMatchingId() {
+        // Creating an original product
+        Product originalProduct = new Product();
+        originalProduct.setProductId("aBunchOfBull");
+        originalProduct.setProductName("Ryuuen");
+        originalProduct.setProductQuantity(10);
+        productRepository.create(originalProduct);
+
+        // Attempting to update with a product having a different ID
+        String updatedName = "Koenji";
+        int updatedQuantity = 5;
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("differentId"); // Different ID
+        updatedProduct.setProductName(updatedName);
+        updatedProduct.setProductQuantity(updatedQuantity);
+        productRepository.edit(updatedProduct);
+    }
+
+    @Test
     void testDeleteProduct() {
         // Added logs to make sure that this code is doing exactly what I'm thinking of it doing
         System.out.println("Starting testDeleteProduct...");
