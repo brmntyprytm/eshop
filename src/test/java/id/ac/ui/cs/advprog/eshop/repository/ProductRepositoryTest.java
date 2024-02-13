@@ -6,14 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductRepositoryTest {
+class ProductRepositoryTest {
 
     @InjectMocks
     ProductRepository productRepository;
@@ -35,11 +33,13 @@ public class ProductRepositoryTest {
         assertEquals(product.getProductName(), savedProduct.getProductName());
         assertEquals(product.getProductQuantity(), savedProduct.getProductQuantity());
     }
+
     @Test
     void testFindAllIfEmpty() {
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
     }
+
     @Test
     void testFindAllIfMoreThanOneProduct() {
         Product product1 = new Product();
@@ -64,6 +64,26 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    void testFindById() {
+        System.out.println("Starting testFindById...");
+        Product product1 = new Product();
+        product1.setProductId("8a1c18b7-e61f-4723-b535-8bfa88c9201d");
+        product1.setProductName("Karuizawa");
+        product1.setProductQuantity(20);
+        productRepository.create(product1);
+        System.out.println("Product 1 created: " + product1.getProductName() + ", quantity: " + product1.getProductQuantity());
+        System.out.println("Finding product with ID: " + product1.getProductId());
+        Product targetProduct1 = productRepository.findById("8a1c18b7-e61f-4723-b535-8bfa88c9201d");
+        System.out.println("Asserting targetProduct1...");
+        assertEquals(product1, targetProduct1);
+        System.out.println("Finding product with non-existing ID...");
+        Product targetProduct2 = productRepository.findById("non-existing-id");
+        System.out.println("Asserting targetProduct2...");
+        assertNull(targetProduct2);
+        System.out.println("End of testFindById.");
+    }
+
+    @Test
     void testEditProduct() {
         // Added logs to make sure that this code is doing exactly what I'm thinking of it doing
         System.out.println("Starting testEditProduct...");
@@ -85,6 +105,10 @@ public class ProductRepositoryTest {
         updatedProduct.setProductQuantity(updatedQuantity);
         productRepository.edit(updatedProduct);
         System.out.println("Product updated: " + updatedProduct.getProductName() + ", quantity: " + updatedQuantity);
+
+        // Assert
+        assertEquals(updatedName, productRepository.findById(originalProduct.getProductId()).getProductName());
+        assertEquals(updatedQuantity, productRepository.findById(originalProduct.getProductId()).getProductQuantity());
 
         System.out.println("End of testEditProduct.");
     }
@@ -117,6 +141,28 @@ public class ProductRepositoryTest {
             System.out.println("Caught expected exception: " + e.getMessage());
             assertTrue(e.getMessage().contains("Negative quantities are not allowed."));
         }
+    }
+
+    @Test
+    void testEditProductWithNonMatchingId() {
+        Product originalProduct = new Product();
+        originalProduct.setProductId("aBunchOfBull");
+        originalProduct.setProductName("Ryuuen");
+        originalProduct.setProductQuantity(10);
+        productRepository.create(originalProduct);
+
+        String updatedName = "Koenji";
+        int updatedQuantity = 5;
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("differentId");
+        updatedProduct.setProductName(updatedName);
+        updatedProduct.setProductQuantity(updatedQuantity);
+        productRepository.edit(updatedProduct);
+
+        Product retrievedProduct = productRepository.findById("aBunchOfBull");
+        assertEquals("Ryuuen", retrievedProduct.getProductName());
+        assertEquals(10, retrievedProduct.getProductQuantity());
     }
 
     @Test
