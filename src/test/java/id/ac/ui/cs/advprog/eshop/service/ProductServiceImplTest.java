@@ -31,8 +31,8 @@ public class ProductServiceImplTest {
     @Test
     void createProduct() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product.setProductName("Sampo Cap Bambang");
+        product.setProductId("1234567890");
+        product.setProductName("Gehrman, The First Hunter");
         product.setProductQuantity(100);
 
         when(productRepository.create(any(Product.class))).thenReturn(product);
@@ -50,13 +50,13 @@ public class ProductServiceImplTest {
     void findAllProducts() {
         List<Product> productList = new ArrayList<>();
         Product product1 = new Product();
-        product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product1.setProductName("Sampo Cap Bambang");
+        product1.setProductId("1234567890");
+        product1.setProductName("Fear The Old Blood");
         product1.setProductQuantity(100);
 
         Product product2 = new Product();
-        product2.setProductId("bd6e1e99-824a-48c4-a269-155675134157");
-        product2.setProductName("Beras Kualitas Super");
+        product2.setProductId("0987654321");
+        product2.setProductName("Paleblood");
         product2.setProductQuantity(50);
 
         productList.add(product1);
@@ -74,8 +74,8 @@ public class ProductServiceImplTest {
     @Test
     void editProduct() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product.setProductName("Sampo Cap Bambang");
+        product.setProductId("1234567890");
+        product.setProductName("Lady Maria of The Astral Clocktower");
         product.setProductQuantity(100);
 
         when(productRepository.edit(any(Product.class))).thenReturn(product);
@@ -90,19 +90,19 @@ public class ProductServiceImplTest {
     @Test
     void getProductById() {
         Product product1 = new Product();
-        product1.setProductId("1");
-        product1.setProductName("Product 1");
+        product1.setProductId("1234567890");
+        product1.setProductName("Rakuyo");
 
         Product product2 = new Product();
-        product2.setProductId("2");
-        product2.setProductName("Product 2");
+        product2.setProductId("0987654321");
+        product2.setProductName("Saw Cleaver");
 
         List<Product> productList = new ArrayList<>();
         productList.add(product1);
         productList.add(product2);
         when(productRepository.findAll()).thenReturn(productList.iterator());
 
-        String productIdToGet = "2";
+        String productIdToGet = "0987654321";
         Product retrievedProduct = productService.get(productIdToGet);
 
         assertNotNull(retrievedProduct);
@@ -116,8 +116,8 @@ public class ProductServiceImplTest {
     void deleteProductWithSufficientQuantity() {
         // Create a product with initial quantity 2
         Product product = new Product();
-        product.setProductId("1");
-        product.setProductName("Product 1");
+        product.setProductId("1234567890");
+        product.setProductName("Moonlight Greatsword");
         product.setProductQuantity(2);
 
         // Mock the get() method to return the above product
@@ -126,7 +126,7 @@ public class ProductServiceImplTest {
         }}.iterator());
 
         // Invoke the delete() method
-        assertTrue(productService.delete("1"));
+        assertTrue(productService.delete("1234567890"));
 
         // Verify that product quantity is decremented and no deletion happens
         assertEquals(1, product.getProductQuantity());
@@ -137,8 +137,8 @@ public class ProductServiceImplTest {
     void deleteProductWithInsufficientQuantity() {
         // Create a product with initial quantity 0
         Product product = new Product();
-        product.setProductId("1");
-        product.setProductName("Product 1");
+        product.setProductId("1234567890");
+        product.setProductName("Evelyn");
         product.setProductQuantity(0);
 
         // Mock the get() method to return the above product
@@ -147,7 +147,7 @@ public class ProductServiceImplTest {
         }}.iterator());
 
         // Invoke the delete() method
-        assertFalse(productService.delete("1"));
+        assertFalse(productService.delete("1234567890"));
 
         // Verify that product quantity is not changed and no deletion happens
         assertEquals(0, product.getProductQuantity());
@@ -160,7 +160,7 @@ public class ProductServiceImplTest {
         when(productRepository.findAll()).thenReturn(new ArrayList<Product>().iterator());
 
         // Invoke the delete() method
-        assertFalse(productService.delete("1"));
+        assertFalse(productService.delete("1234567890"));
 
         // Verify that no interactions with product repository occur
         verify(productRepository, never()).delete(any(Product.class));
@@ -170,8 +170,8 @@ public class ProductServiceImplTest {
     void deleteProductWithZeroQuantityShouldInvokeRepositoryDelete() {
         // Create a product with initial quantity 1
         Product product = new Product();
-        product.setProductId("1");
-        product.setProductName("Product 1");
+        product.setProductId("1234567890");
+        product.setProductName("Ludwig, The Holy Blade");
         product.setProductQuantity(1);
 
         // Mock the get() method to return the above product
@@ -180,7 +180,7 @@ public class ProductServiceImplTest {
         }}.iterator());
 
         // Invoke the delete() method
-        assertTrue(productService.delete("1"));
+        assertTrue(productService.delete("1234567890"));
 
         // Verify that product quantity is decremented and productRepository.delete() is invoked
         assertEquals(0, product.getProductQuantity());
