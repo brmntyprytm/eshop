@@ -46,3 +46,29 @@ There might be room for improvements on the optimization side of things, though 
 
 
 </details>
+
+<details>
+<summary><strong>03 - OO Principles</strong></summary>
+
+### Reflection
+1. - Single Responsibility Principle (SRP):
+   Each class (ProductRepository and CarRepository) has a single responsibility related to managing data for their respective entities (Product and Car). They handle operations such as creation, deletion, and retrieval of data related to their entity.
+   - Open/Closed Principle (OCP):
+   The code is designed in a way that allows for extension without modification. For example, if you need to add new functionality to the repositories, you can do so by adding new methods or extending the interfaces, without modifying the existing code.
+   - Liskov Substitution Principle (LSP):
+   It adheres to the principle by ensuring that subclasses can be used interchangeably with their parent classes. For instance, if you have subclasses of Product or Car, they should be able to be used wherever a Product or Car is expected.
+   - Interface Segregation Principle (ISP):
+   Each repository interface (ProductRepository and CarRepository) defines a set of methods specific to the data entity it manages. This promotes smaller, more focused interfaces that clients can depend on without being forced to implement unnecessary methods.
+   - Dependency Inversion Principle (DIP):
+   The code uses dependency injection to invert the dependencies between higher-level and lower-level modules. For example, the ProductService and CarService classes depend on abstractions (ProductRepository and CarRepository interfaces) rather than concrete implementations 
+   (ProductRepositoryImpl and CarRepositoryImpl). This promotes decoupling and allows for easier substitution of implementations.
+
+
+2. - After applying SOLID, the code is made easier to maintain, test, and extend on, leading to a more robust and scalable codebase.
+   - Product and Car interfaces are made to allow you to treat different content types uniformly and add types without modifying existing code.
+   
+
+3. - Without adhering to SOLID principles, your code tends to become tightly coupled and less flexible. Making changes or adding new features becomes challenging as modifications in one part of the codebase may inadvertently affect other parts.
+   - Testing becomes more cumbersome as components are tightly coupled, leading to difficulties in isolating and mocking dependencies.
+   - Lack of clear interfaces and responsibilities can hinder the addition of new features or the adaptation to changing requirements, resulting in a brittle and unmaintainable codebase.
+</details>
