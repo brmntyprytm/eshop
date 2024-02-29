@@ -41,7 +41,7 @@ public class OrderTest {
         assertEquals("Sampo Cap Bambang", order.getProducts().get(0).getProductName());
         assertEquals("Sabun Cap Usep", order.getProducts().get(1).getProductName());
 
-        assertEquals("XXX", order.getId());
+        assertEquals("13652556-012a-4c07-b546-54eb1396d79b", order.getId());
         assertEquals(170856000L, order.getOrderTime());
         assertEquals("Safira Sudrajat", order.getAuthor());
         assertEquals("WAITING_PAYMENT", order.getStatus());
@@ -69,7 +69,8 @@ public class OrderTest {
 
     @Test
     void testSetStatusToInvalidStatus() {
-        Order order = new Order("13652556-012a-4c07-b546-54eb1396d79b", this.products, 170856000L, "Safira Sudrajat");
+        Order order = new Order("13652556-012a-4c07-b546-54eb1396d79b",
+                this.products, 170856000L, "Safira Sudrajat");
         assertThrows(IllegalArgumentException.class, () -> order.setStatus("MEOW"));
     }
 }
