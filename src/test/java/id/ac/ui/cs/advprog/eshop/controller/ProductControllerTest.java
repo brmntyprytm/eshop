@@ -31,6 +31,7 @@ public class ProductControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @SuppressWarnings("null")
     @Test
     void testCreateProductPage() {
         String viewName = productController.createProductPage(model);

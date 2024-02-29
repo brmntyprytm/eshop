@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -121,9 +120,11 @@ class ProductServiceImplTest {
         product.setProductQuantity(2);
 
         // Mock the get() method to return the above product
-        when(productRepository.findAll()).thenReturn(new ArrayList<Product>() {{
-            add(product);
-        }}.iterator());
+        when(productRepository.findAll()).thenReturn(new ArrayList<Product>() {
+            {
+                add(product);
+            }
+        }.iterator());
 
         // Invoke the delete() method
         assertTrue(productService.delete("1234567890"));
@@ -142,9 +143,11 @@ class ProductServiceImplTest {
         product.setProductQuantity(0);
 
         // Mock the get() method to return the above product
-        when(productRepository.findAll()).thenReturn(new ArrayList<Product>() {{
-            add(product);
-        }}.iterator());
+        when(productRepository.findAll()).thenReturn(new ArrayList<Product>() {
+            {
+                add(product);
+            }
+        }.iterator());
 
         // Invoke the delete() method
         assertFalse(productService.delete("1234567890"));
@@ -175,14 +178,17 @@ class ProductServiceImplTest {
         product.setProductQuantity(1);
 
         // Mock the get() method to return the above product
-        when(productRepository.findAll()).thenReturn(new ArrayList<Product>() {{
-            add(product);
-        }}.iterator());
+        when(productRepository.findAll()).thenReturn(new ArrayList<Product>() {
+            {
+                add(product);
+            }
+        }.iterator());
 
         // Invoke the delete() method
         assertTrue(productService.delete("1234567890"));
 
-        // Verify that product quantity is decremented and productRepository.delete() is invoked
+        // Verify that product quantity is decremented and productRepository.delete() is
+        // invoked
         assertEquals(0, product.getProductQuantity());
         verify(productRepository, times(1)).delete(product);
     }
