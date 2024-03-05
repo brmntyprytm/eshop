@@ -17,7 +17,6 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.util.AssertionErrors.assertNull;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceImplTest {
@@ -81,7 +80,7 @@ public class OrderServiceImplTest {
         doReturn(order).when(orderRepository).findById(order.getId());
 
         assertThrows(IllegalArgumentException.class,
-                () -> orderService.updateStatus(order.getId()), "MEOW");
+                () -> orderService.updateStatus(order.getId(), "MEOW"));
 
         verify(orderRepository, times(0)).save(any(Order.class));
     }
