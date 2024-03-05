@@ -3,7 +3,6 @@ package id.ac.ui.cs.advprog.eshop.repository;
 import enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +18,12 @@ public class OrderRepositoryTest {
     @BeforeEach
     void setUp() {
         orderRepository = new OrderRepository();
-        List<Product> product1 = new ArrayList<>();
+
+        List<Product> products = new ArrayList<>();
+        Product product1 = new Product();
         product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bdb6");
         product1.setProductName("Sampo Cap Bambang");
-        product1.setProductQuantitity(2);
+        product1.setProductQuantity(2);
         products.add(product1);
 
         orders = new ArrayList<>();
@@ -39,7 +40,7 @@ public class OrderRepositoryTest {
         Order order = orders.get(1);
         Order result = orderRepository.save(order);
 
-        Order findResult = orderRepository.findById(orders.get(1).get());
+        Order findResult = orderRepository.findById(orders.get(1).getId());
         assertEquals(order.getId(), result.getId());
         assertEquals(order.getId(), findResult.getId());
         assertEquals(order.getOrderTime(), findResult.getOrderTime());
@@ -104,4 +105,5 @@ public class OrderRepositoryTest {
                 orders.get(1).getAuthor().toLowerCase());
         assertTrue(orderList.isEmpty());
     }
+
 }
