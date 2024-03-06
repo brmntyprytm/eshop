@@ -71,4 +71,26 @@ There might be room for improvements on the optimization side of things, though 
 3. - Without adhering to SOLID principles, your code tends to become tightly coupled and less flexible. Making changes or adding new features becomes challenging as modifications in one part of the codebase may inadvertently affect other parts.
    - Testing becomes more cumbersome as components are tightly coupled, leading to difficulties in isolating and mocking dependencies.
    - Lack of clear interfaces and responsibilities can hinder the addition of new features or the adaptation to changing requirements, resulting in a brittle and unmaintainable codebase.
+</details> 
+
+<details>
+<summary><strong>04 - TDD & Refactoring</strong></summary>
+
+### Reflection 1
+1. Did you make the tests before the code?
+   - Yes, the tests were created before writing the code. Test cases such as `testCreateOrderEmptyProduct`, `testSetStatusToInvalidStatus`, `testCreateOrderIfAlreadyExists`, etc. Were written to define the expected behavior of the Order class.
+2. Did you run the tests for the right reasons?
+   - The tests were run to verify that the implemented code functions correctly according to the defined requirements and that it handles edge cases appropriately. For example, ensuring that creating an order with empty products throws an exception (`testCreateOrderEmptyProduct`) and setting an invalid status throws an exception (`testSetStatusToInvalidStatus`).
+3. Did you actually write the right code?
+   - The written code addresses the requirements specified by the tests. However, there was an oversight in the implementation of the `createOrder` method in the `OrderServiceImpl` class, which caused the tests to fail. This indicates a need for more careful implementation.
+4. Did you refactor properly once the tests passed?
+   - Yes, the code was refactored after passing tests to improve code quality, readability, and maintainability. In this case, refactoring might involve improving the error handling mechanism in the createOrder method and ensuring consistency in naming conventions.
+
+### Reflection 2
+
+1. Fast: Each test case focuses on a specific behavior and completes its execution swiftly.
+2. Isolated: Each test sets up its own data and verifies a specific behavior without interference from other tests.
+3. Repeatable: Running the tests multiple times should yield the same results, provided the code and test environment remain unchanged.
+4. Self-Validating: They use assertion methods like assertEquals and assertThrows to automatically determine the test outcome. The tests do not require manual inspection to determine success or failure.
+5. Timely: tests are already written before the code they are testing to drive the development process
 </details>
