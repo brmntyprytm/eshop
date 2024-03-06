@@ -13,10 +13,11 @@ public class Payment {
     private String status;
     private Map<String, String> paymentData;
 
-    public Payment(String id, String method, Map<String, String> paymentData) {
+    public Payment(String id, String method, Map<String, String> paymentData, String status) {
         this.id = id;
         this.method = method;
         this.paymentData = paymentData;
+        this.status = status;
 
         if (paymentData.isEmpty()) {
             throw new IllegalArgumentException("Payment data cannot be empty");
@@ -32,6 +33,9 @@ public class Payment {
             default:
                 throw new IllegalArgumentException("Invalid payment method");
         }
+    }
+
+    public Payment(String id, String method, Map<String, String> paymentData) {
     }
 
     private void handleVoucherCodePayment() {
