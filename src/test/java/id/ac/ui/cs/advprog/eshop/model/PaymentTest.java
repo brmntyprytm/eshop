@@ -81,4 +81,48 @@ public class PaymentTest {
         assertTrue(paymentService.getAllPayments().contains(payment1));
         assertTrue(paymentService.getAllPayments().contains(payment2));
     }
+
+    @Test
+    void testAddCashOnDeliveryPaymentWithValidVoucherCode() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP12345678ABCD");
+
+        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
+
+        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals("ESHOP12345678ABCD", payment.getPaymentData().get("voucherCode"));
+    }
+
+    @Test
+    void testAddCashOnDeliveryPaymentWithInvalidVoucherCode() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "INVALID123");
+
+        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
+
+        assertEquals("REJECTED", payment.getStatus());
+        assertNull(payment.getPaymentData().get("voucherCode"));
+    }
+
+    @Test
+    void testAddCashOnDeliveryPaymentWithEmptyVoucherCode() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "");
+
+        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
+
+        assertEquals("REJECTED", payment.getStatus());
+        assertNull(payment.getPaymentData().get("voucherCode"));
+    }
+
+    @Test
+    void testAddCashOnDeliveryPaymentWithNullVoucherCode() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", null);
+
+        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
+
+        assertEquals("REJECTED", payment.getStatus());
+        assertNull(payment.getPaymentData().get("voucherCode"));
+    }
 }
