@@ -2,14 +2,13 @@ package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
-import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
-@Service
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
 
@@ -17,66 +16,49 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    @Autowired
-    OrderRepository orderRepository;
-
-    Map<String, String> IdHash = new HashMap<>();
-
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
         String status;
-        Order specifiedOrder = orderRepository.findById(order.getId());
-
-        if (specifiedOrder == null){
-            throw new NoSuchElementException();
-        }
-
         status = switch (method) {
             case "voucherCode" -> paymentByVoucherCode(paymentData);
             case "cashOnDelivery" -> paymentByCOD(paymentData);
-            default -> throw new IllegalArgumentException();
+            default -> throw new IllegalArgumentException("Invalid payment method");
         };
 
         Payment payment = new Payment(UUID.randomUUID().toString(), method, paymentData, status);
 
-        switch (status) {
-            case "SUCCESS" -> specifiedOrder.setStatus("SUCCESS");
-            case "REJECTED" -> specifiedOrder.setStatus("FAILED");
+        if (status.equals("SUCCESS")) {
+            order.setStatus("SUCCESS");
+        } else if (status.equals("REJECTED")) {
+            order.setStatus("FAILED");
         }
 
-        orderRepository.save(specifiedOrder);
-        IdHash.put(payment.getId(), specifiedOrder.getId());
         paymentRepository.savePayment(payment);
 
         return payment;
-
     }
 
     private String paymentByVoucherCode(Map<String, String> paymentData) {
-        String voucherStatus;
-
         if (!paymentData.containsKey("voucherCode")) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Voucher code is required");
         }
 
         if (isValidVoucherCode(paymentData.get("voucherCode"))) {
-            voucherStatus = "SUCCESS";
+            return "SUCCESS";
         } else {
-            voucherStatus = "REJECTED";
+            return "REJECTED";
         }
-
-        return voucherStatus;
     }
 
     private String paymentByCOD(Map<String, String> paymentData) {
         if (!paymentData.containsKey("address") || !paymentData.containsKey("deliveryFee")) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Address and delivery fee are required for cash on delivery");
         }
 
         String address = paymentData.get("address");
         String deliveryFee = paymentData.get("deliveryFee");
 
-        if (isEmptyOrNull(address) || isEmptyOrNull(deliveryFee)) {
+        if (address == null || address.isEmpty() || deliveryFee == null || deliveryFee.isEmpty()) {
             return "REJECTED";
         }
 
@@ -87,53 +69,26 @@ public class PaymentServiceImpl implements PaymentService {
         return voucherCode != null &&
                 voucherCode.length() == 16 &&
                 voucherCode.startsWith("ESHOP") &&
-                getDigitCount(voucherCode) == 8;
-    }
-
-    private int getDigitCount(String input) {
-        return (int) input.chars().filter(Character::isDigit).count();
-    }
-
-    private boolean isEmptyOrNull(String str) {
-        return str == null || str.isEmpty();
+                voucherCode.chars().filter(Character::isDigit).count() == 8;
     }
 
     @Override
     public Payment setStatus(Payment payment, String status) {
-        Payment existingPayment = paymentRepository.findById(payment.getId());
-
-        if (existingPayment == null) {
-            throw new NoSuchElementException();
-        }
-
-        existingPayment.setStatus(status);
-        paymentRepository.savePayment(existingPayment);
-
-        String orderId = paymentIdToOrderId().get(payment.getId());
-        Order associatedOrder = orderRepository.findById(orderId);
-
-        if ("SUCCESS".equals(status)) {
-            associatedOrder.setStatus("SUCCESS");
-        } else if ("REJECTED".equals(status)) {
-            associatedOrder.setStatus("FAILED");
-        }
-
-        orderRepository.save(associatedOrder);
-        return existingPayment;
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public Payment setStatus(Payment payment, String status, Order order) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
     public Payment getPayment(String paymentId) {
-        return paymentRepository.findById(paymentId);
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public List<Payment> getAllPayments() {return paymentRepository.findAll();}
-
-    public Map<String,String> paymentIdToOrderId() {return IdHash;}
+    public List<Payment> getAllPayments() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }
