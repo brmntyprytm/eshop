@@ -53,4 +53,47 @@ public class PaymentTest {
 
         assertEquals(updatedPaymentData, payment.getPaymentData());
     }
+
+    @Test
+    void testVoucherCodePaymentWithInvalidVoucherCode() {
+        String id = "2";
+        String method = "VOUCHER_CODE";
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "INVALID123");
+
+        Payment payment = new Payment(id, method, paymentData);
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
+    void testCashOnDeliveryPayment() {
+        String id = "3";
+        String method = "CASH_ON_DELIVERY";
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("address", "123 Main St");
+        paymentData.put("deliveryFee", "10.00");
+
+        Payment payment = new Payment(id, method, paymentData);
+
+        assertEquals("SUCCESS", payment.getStatus());
+    }
+
+    @Test
+    void testInvalidPaymentMethod() {
+        String id = "4";
+        String method = "INVALID_METHOD";
+        Map<String, String> paymentData = new HashMap<>();
+
+        assertThrows(IllegalArgumentException.class, () -> new Payment(id, method, paymentData));
+    }
+
+    @Test
+    void testEmptyPaymentData() {
+        String id = "5";
+        String method = "VOUCHER_CODE";
+        Map<String, String> paymentData = new HashMap<>();
+
+        assertThrows(IllegalArgumentException.class, () -> new Payment(id, method, paymentData));
+    }
 }
