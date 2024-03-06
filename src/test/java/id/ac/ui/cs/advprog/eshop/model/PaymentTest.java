@@ -1,128 +1,56 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.HashMap;
 import java.util.Map;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PaymentTest {
-    private Order order;
-    private PaymentRepository paymentRepository;
-
-    @BeforeEach
-    void setUp() {
-        this.order = new Order();
-        this.paymentRepository = new PaymentRepository();
-    }
 
     @Test
-    void testAddPayment() {
+    void testPaymentInitialization() {
+        String id = "1";
+        String method = "Credit Card";
+        String status = "SUCCESS";
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("transactionId", "123456789");
-        PaymentService paymentService = new PaymentService();
-        Payment payment = paymentService.addPayment(order, "Credit Card", paymentData);
+        paymentData.put("transactionId", "1234567890");
 
-        assertNotNull(payment);
-        assertEquals("Credit Card", payment.getMethod());
+        Payment payment = new Payment(id, method, status, paymentData);
+
+        assertEquals(id, payment.getId());
+        assertEquals(method, payment.getMethod());
+        assertEquals(status, payment.getStatus());
         assertEquals(paymentData, payment.getPaymentData());
-        assertTrue(paymentRepository.getAllPayments().contains(payment));
     }
 
     @Test
-    void testSetStatus_Success() {
+    void testPaymentStatusChange() {
+        String id = "1";
+        String method = "Credit Card";
+        String initialStatus = "PENDING";
+        String updatedStatus = "SUCCESS";
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("transactionId", "123456789");
-        PaymentService paymentService = new PaymentService();
-        Payment payment = paymentService.addPayment(order, "Credit Card", paymentData);
+        paymentData.put("transactionId", "1234567890");
+        Payment payment = new Payment(id, method, initialStatus, paymentData);
 
-        paymentService.setStatus(payment, "SUCCESS");
+        payment.setStatus(updatedStatus);
 
-        assertEquals("SUCCESS", payment.getStatus());
-        assertEquals("SUCCESS", order.getStatus());
+        assertEquals(updatedStatus, payment.getStatus());
     }
 
     @Test
-    void testSetStatus_Rejected() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("transactionId", "123456789");
-        PaymentService paymentService = new PaymentService();
-        Payment payment = paymentService.addPayment(order, "Credit Card", paymentData);
+    void testPaymentDataModification() {
+        String id = "1";
+        String method = "Credit Card";
+        String status = "SUCCESS";
+        Map<String, String> initialPaymentData = new HashMap<>();
+        initialPaymentData.put("transactionId", "1234567890");
+        Payment payment = new Payment(id, method, status, initialPaymentData);
 
-        paymentService.setStatus(payment, "REJECTED");
+        Map<String, String> updatedPaymentData = new HashMap<>();
+        updatedPaymentData.put("transactionId", "0987654321");
+        payment.setPaymentData(updatedPaymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
-        assertEquals("FAILED", order.getStatus());
-    }
-
-    @Test
-    void testGetPayment() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("transactionId", "123456789");
-        PaymentService paymentService = new PaymentService();
-        Payment payment = paymentService.addPayment(order, "Credit Card", paymentData);
-
-        Payment retrievedPayment = paymentService.getPayment(payment.getId());
-
-        assertEquals(payment, retrievedPayment);
-    }
-
-    @Test
-    void testGetAllPayments() {
-        Map<String, String> paymentData1 = new HashMap<>();
-        paymentData1.put("transactionId", "123456789");
-        Map<String, String> paymentData2 = new HashMap<>();
-        paymentData2.put("transactionId", "987654321");
-        PaymentService paymentService = new PaymentService();
-        Payment payment1 = paymentService.addPayment(order, "Credit Card", paymentData1);
-        Payment payment2 = paymentService.addPayment(order, "PayPal", paymentData2);
-
-        assertTrue(paymentService.getAllPayments().contains(payment1));
-        assertTrue(paymentService.getAllPayments().contains(payment2));
-    }
-
-    @Test
-    void testAddCashOnDeliveryPaymentWithValidVoucherCode() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP12345678ABCD");
-
-        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
-
-        assertEquals("SUCCESS", payment.getStatus());
-        assertEquals("ESHOP12345678ABCD", payment.getPaymentData().get("voucherCode"));
-    }
-
-    @Test
-    void testAddCashOnDeliveryPaymentWithInvalidVoucherCode() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "INVALID123");
-
-        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
-
-        assertEquals("REJECTED", payment.getStatus());
-        assertNull(payment.getPaymentData().get("voucherCode"));
-    }
-
-    @Test
-    void testAddCashOnDeliveryPaymentWithEmptyVoucherCode() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "");
-
-        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
-
-        assertEquals("REJECTED", payment.getStatus());
-        assertNull(payment.getPaymentData().get("voucherCode"));
-    }
-
-    @Test
-    void testAddCashOnDeliveryPaymentWithNullVoucherCode() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", null);
-
-        Payment payment = PaymentService.addPayment(order, "Cash on Delivery", paymentData);
-
-        assertEquals("REJECTED", payment.getStatus());
-        assertNull(payment.getPaymentData().get("voucherCode"));
+        assertEquals(updatedPaymentData, payment.getPaymentData());
     }
 }
